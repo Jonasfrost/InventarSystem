@@ -1,0 +1,39 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Udlånte Varer";
+}
+
+<div class="container mt-4">
+    <h2>Udlånte enheder</h2>
+
+    <table class="table table-striped table-bordered mt-3">
+        <thead class="table-info">
+            <tr>
+                <th>Udlån ID</th>
+                <th>Elev ID</th>
+                <th>Vare Navn</th> 
+                <th>Antal</th>
+                <th>Udlånt Dato</th>
+                <th>Afleveret Dato</th>
+                <th>Handling</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var udlaan in Model.UdlaanteVarer)
+            {
+                <tr>
+                    <td>@udlaan.udlaantId</td>
+                    <td>@udlaan.eleverId</td>
+                    <td>@(udlaan.Inventar?.Item ?? "Ukendt vare")</td> 
+                    <td>@udlaan.udlaantAntal</td>
+                    <td>@udlaan.udlaantDato.ToShortDateString()</td>
+                    <td>@(udlaan.udlaantAfleveretDato?.ToShortDateString() ?? "-")</td>
+                    <td>
+                        <a asp-page="/RedigerUdlaant" asp-route-id="@udlaan.udlaantId" class="btn btn-sm btn-warning">Rediger</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

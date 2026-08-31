@@ -1,0 +1,54 @@
+﻿@page "{id:int}"
+@namespace InventarSystem.Pages
+@model RedigerElevModel
+@{
+    ViewData["Title"] = "Rediger Elev";
+}
+
+<div class="container mt-4">
+    <h2>Rediger Elev</h2>
+
+    <form method="post" class="mt-3">
+        <input type="hidden" asp-for="Elev.ElevId" />
+
+        <div class="mb-3">
+            <label class="form-label">Fornavn</label>
+            <input type="text" asp-for="Elev.Fn" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Efternavn</label>
+            <input type="text" asp-for="Elev.Ln" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">E-mail</label>
+            <input type="email" asp-for="Elev.Mail" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mobil</label>
+            <input type="text" asp-for="Elev.Mobil" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Instruktør</label>
+            <select asp-for="Elev.InstruktorId" class="form-select">
+                <option value="">-- Ingen instruktør --</option>
+                @foreach (var instruktor in Model.Instruktoerer)
+                {
+                    <option value="@instruktor.InstruktorId">
+                        @instruktor.Fn @instruktor.Ln (ID: @instruktor.InstruktorId)
+                    </option>
+                }
+            </select>
+            <span asp-validation-for="Elev.InstruktorId" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Gem Ændringer</button>
+            <button type="submit" asp-page-handler="Delete" asp-route-id="@Model.Elev.ElevId" class="btn btn-danger" onclick="return confirm('Vil du slette denne elev?');">Slet</button>
+            <a asp-page="/Elever" class="btn btn-secondary">Annuller</a>
+        </div>
+    </form>
+</div>

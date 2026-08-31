@@ -1,0 +1,29 @@
+﻿@page
+@model OpretModel
+@{
+    ViewData["Title"] = "Tilføj Vare";
+}
+
+<div class="container mt-4">
+    <h2>Tilføj nyt inventar</h2>
+
+    <form method="post" class="mt-3">
+        <div class="mb-3">
+            <label class="form-label">Varenavn (Item)</label>
+            <input type="text" asp-for="NytInventar.Item" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Serienummer (SN)</label>
+            <input type="text" asp-for="NytInventar.Sn" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Antal</label>
+            <input type="number" asp-for="NytInventar.Antal" class="form-control" min="1" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Gem i database</button>
+        <a asp-page="/Tilgængelig" class="btn btn-secondary">Annuller</a>
+    </form>
+</div>

@@ -1,0 +1,37 @@
+﻿@page
+@model EleverModel
+@{
+    ViewData["Title"] = "Elever";
+}
+
+<div class="container mt-4">
+    <h2>Elever</h2>
+
+    <table class="table table-striped table-bordered mt-3">
+        <thead class="table-info">
+            <tr>
+                <th>Elev ID</th>
+                <th>Navn</th>
+                <th>E-mail</th>
+                <th>Mobil</th>
+                <th>Instruktør ID</th>
+                <th>Handling</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var elev in Model.EleverListe)
+            {
+                <tr>
+                    <td>@elev.ElevId</td>
+                    <td>@elev.Fn @elev.Ln</td>
+                    <td>@(elev.Mail ?? "-")</td>
+                    <td>@(elev.Mobil ?? "-")</td>
+                    <td>@(elev.InstruktorId.HasValue ? elev.InstruktorId.Value.ToString() : "-")</td>
+                    <td>
+                        <a asp-page="/RedigerElev" asp-route-id="@elev.ElevId" class="btn btn-sm btn-warning">Rediger</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
