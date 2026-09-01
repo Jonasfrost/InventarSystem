@@ -38,7 +38,9 @@
 
         <div class="d-flex gap-2">
             <button type="submit" class="btn btn-primary">Gem Ændringer</button>
-            <button type="submit" asp-page-handler="Delete" asp-route-id="@Model.Udlaan.udlaantId" class="btn btn-danger" onclick="return confirm('Vil du slette dette udlån?');">Slet</button>
+            <button type="submit" asp-page-handler="DeleteSingle" asp-route-id="@Model.Udlaan.udlaantId" class="btn btn-danger">
+                Aflever vare
+            </button>
             <a asp-page="/Index" class="btn btn-secondary">Annuller</a>
         </div>
     </form>

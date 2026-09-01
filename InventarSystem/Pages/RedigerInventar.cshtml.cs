@@ -59,26 +59,31 @@ public class RedigerInventarModel : PageModel
         return RedirectToPage("/Tilgængelig");
     }
 
-    public async Task<IActionResult> OnPostDeleteAsync(int id)
+    public async Task<IActionResult> OnPostDeleteSelectedAsync(List<int> selectedItems)
     {
-        var tilhoerendeUdlaan = await _context.Udlaant
-            .Where(u => u.inventarId == id)
+        if (selectedItems == null || !selectedItems.Any())
+        {
+            return RedirectToPage();
+        }
+
+        var udlaanListe = await _context.Udlaant
+            .Where(u => selectedItems.Contains(u.udlaantId))
             .ToListAsync();
 
-        if (tilhoerendeUdlaan.Any())
+        foreach (var udlaan in udlaanListe)
         {
-            _context.Udlaant.RemoveRange(tilhoerendeUdlaan);
-            await _context.SaveChangesAsync();
+            var inventarVare = await _context.Inventar.FindAsync(udlaan.inventarId);
+
+            if (inventarVare != null)
+            {
+                inventarVare.Antal += udlaan.udlaantAntal;
+            }
         }
 
-        var vareTilSletning = await _context.Inventar.FindAsync(id);
+        _context.Udlaant.RemoveRange(udlaanListe);
 
-        if (vareTilSletning != null)
-        {
-            _context.Inventar.Remove(vareTilSletning);
-            await _context.SaveChangesAsync();
-        }
+        await _context.SaveChangesAsync();
 
-        return RedirectToPage("/Tilgængelig");
+        return RedirectToPage();
     }
 }

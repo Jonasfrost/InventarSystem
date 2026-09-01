@@ -6,12 +6,14 @@
 
 <div class="container mt-4">
     <h2>Elever</h2>
+    <a asp-page="/OpretElev" class="btn btn-primary">Tilføj ny elev</a>
 
     <table class="table table-striped table-bordered mt-3">
         <thead class="table-info">
             <tr>
                 <th>Elev ID</th>
-                <th>Navn</th>
+                <th>Fornavn</th>
+                <th>Efternavn</th>
                 <th>E-mail</th>
                 <th>Mobil</th>
                 <th>Instruktør ID</th>
@@ -23,7 +25,8 @@
             {
                 <tr>
                     <td>@elev.ElevId</td>
-                    <td>@elev.Fn @elev.Ln</td>
+                    <td>@elev.Fn </td>
+                    <td>@elev.Ln</td>
                     <td>@(elev.Mail ?? "-")</td>
                     <td>@(elev.Mobil ?? "-")</td>
                     <td>@(elev.InstruktorId.HasValue ? elev.InstruktorId.Value.ToString() : "-")</td>

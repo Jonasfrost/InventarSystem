@@ -59,16 +59,23 @@ public class RedigerUdlaantModel : PageModel
         return RedirectToPage("/Index");
     }
 
-    public async Task<IActionResult> OnPostDeleteAsync(int id)
+    public async Task<IActionResult> OnPostDeleteSingleAsync(int id)
     {
-        var udlaanTilSletning = await _context.Udlaant.FindAsync(id);
+        var udlaan = await _context.Udlaant.FindAsync(id);
 
-        if (udlaanTilSletning != null)
+        if (udlaan != null)
         {
-            _context.Udlaant.Remove(udlaanTilSletning);
+            var inventarVare = await _context.Inventar.FindAsync(udlaan.inventarId);
+
+            if (inventarVare != null)
+            {
+                inventarVare.Antal += udlaan.udlaantAntal;
+            }
+
+            _context.Udlaant.Remove(udlaan);
             await _context.SaveChangesAsync();
         }
 
-        return RedirectToPage("/Index");
+        return RedirectToPage("/Index"); 
     }
 }
