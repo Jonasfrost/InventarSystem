@@ -21,4 +21,6 @@ public class Instruktor
 
     [Column("instruktorMobil")]
     public string? Mobil { get; set; }
+
+    public ICollection<Elev> Elever { get; set; } = new List<Elev>();
 }

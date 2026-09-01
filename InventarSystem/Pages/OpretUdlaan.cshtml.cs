@@ -23,7 +23,7 @@ public class OpretUdlaanModel : PageModel
 
     public async Task<IActionResult> OnGetAsync(int inventarId)
     {
-        Elever = await _context.Elever.ToListAsync();
+        Elever = await _context.Elev.ToListAsync();
 
         Udlaan = new Udlaant
         {
@@ -38,7 +38,7 @@ public class OpretUdlaanModel : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
         // Fail-safe 1: Tjek om den valgte elev findes i databasen
-        var elevEksisterer = await _context.Elever.AnyAsync(e => e.ElevId == Udlaan.eleverId);
+        var elevEksisterer = await _context.Elev.AnyAsync(e => e.ElevId == Udlaan.eleverId);
         if (!elevEksisterer)
         {
             ModelState.AddModelError("Udlaan.eleverId", "Vælg venligst en gyldig elev fra listen.");
@@ -62,7 +62,7 @@ public class OpretUdlaanModel : PageModel
         if (!ModelState.IsValid)
         {
             // Genindlæs eleverne hvis siden skal vises igen pga. fejl
-            Elever = await _context.Elever.ToListAsync();
+            Elever = await _context.Elev.ToListAsync();
             return Page();
         }
 

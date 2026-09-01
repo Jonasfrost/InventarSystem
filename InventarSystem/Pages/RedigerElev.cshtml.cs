@@ -23,7 +23,7 @@ public class RedigerElevModel : PageModel
     public async Task<IActionResult> OnGetAsync(int id)
     {
         Instruktoerer = await _context.Instruktor.ToListAsync();
-        var elev = await _context.Elever.FirstOrDefaultAsync(m => m.ElevId == id);
+        var elev = await _context.Elev.FirstOrDefaultAsync(m => m.ElevId == id);
         if (elev == null)
         {
             return NotFound();
@@ -60,7 +60,7 @@ public class RedigerElevModel : PageModel
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!_context.Elever.Any(e => e.ElevId == Elev.ElevId))
+            if (!_context.Elev.Any(e => e.ElevId == Elev.ElevId))
             {
                 return NotFound();
             }
@@ -75,11 +75,11 @@ public class RedigerElevModel : PageModel
 
     public async Task<IActionResult> OnPostDeleteAsync(int id)
     {
-        var elevTilSletning = await _context.Elever.FindAsync(id);
+        var elevTilSletning = await _context.Elev.FindAsync(id);
 
         if (elevTilSletning != null)
         {
-            _context.Elever.Remove(elevTilSletning);
+            _context.Elev.Remove(elevTilSletning);
             await _context.SaveChangesAsync();
         }
 

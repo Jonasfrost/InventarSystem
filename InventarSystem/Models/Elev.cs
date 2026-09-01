@@ -22,6 +22,7 @@ public class Elev
     [Column("eleverMobil")]
     public string? Mobil { get; set; }
 
+    // Rettes til det præcise SQL-kolonnenavn 'eleverInstruktorId'
     [Column("eleverInstruktorId")]
     public int? InstruktorId { get; set; }
 }

@@ -1,0 +1,84 @@
+﻿@page
+@model InventarSystem.Pages.InstruktoererModel
+@{
+    ViewData["Title"] = "Instruktører";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- VESTRE SIDE: Opret ny instruktør -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Opret ny instruktør</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Fornavn</label>
+                            <input asp-for="NyInstruktor.Fn" class="form-control" required />
+                            <span asp-validation-for="NyInstruktor.Fn" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Initialer / Efternavn</label>
+                            <input asp-for="NyInstruktor.Ln" class="form-control" required />
+                            <span asp-validation-for="NyInstruktor.Ln" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">E-mail</label>
+                            <input asp-for="NyInstruktor.Mail" type="email" class="form-control" />
+                            <span asp-validation-for="NyInstruktor.Mail" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mobil</label>
+                            <input asp-for="NyInstruktor.Mobil" class="form-control" />
+                            <span asp-validation-for="NyInstruktor.Mobil" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Opret instruktør</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- HØJRE SIDE: Tabel over instruktører -->
+        <div class="col-md-8">
+            <h2>Instruktører</h2>
+            <table class="table table-striped table-bordered mt-3">
+                <thead class="table-info">
+                    <tr>
+                        <th>ID</th>
+                        <th>Fornavn</th>
+                        <th>Initialer</th>
+                        <th>E-mail</th>
+                        <th>Mobil</th>
+                        <th>Handling</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.InstruktoerListe != null && Model.InstruktoerListe.Any())
+                    {
+                        @foreach (var i in Model.InstruktoerListe)
+                        {
+                            <tr>
+                                <td>@i.InstruktorId</td>
+                                <td>@i.Fn</td>
+                                <td>@i.Ln</td>
+                                <td>@(i.Mail ?? "-")</td>
+                                <td>@(i.Mobil ?? "-")</td>
+                                <td>
+                                    <a asp-page="/RedigerInstruktor" asp-route-id="@i.InstruktorId" class="btn btn-sm btn-warning">Rediger</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">Ingen instruktører fundet.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

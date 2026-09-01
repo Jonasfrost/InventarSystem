@@ -1,0 +1,57 @@
+﻿@page "{id:int}"
+@model InventarSystem.Pages.RedigerInstruktorModel
+@{
+    ViewData["Title"] = "Rediger Instruktør";
+}
+
+<div class="container mt-4">
+    <h2>Rediger Instruktør</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post">
+                <input type="hidden" asp-for="Instruktor.InstruktorId" />
+
+                <div class="mb-3">
+                    <label class="form-label">Fornavn</label>
+                    <input asp-for="Instruktor.Fn" class="form-control" required />
+                    <span asp-validation-for="Instruktor.Fn" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Efternavn</label>
+                    <input asp-for="Instruktor.Ln" class="form-control" required />
+                    <span asp-validation-for="Instruktor.Ln" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">E-mail</label>
+                    <input asp-for="Instruktor.Mail" type="email" class="form-control" />
+                    <span asp-validation-for="Instruktor.Mail" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mobil</label>
+                    <input asp-for="Instruktor.Mobil" class="form-control" />
+                    <span asp-validation-for="Instruktor.Mobil" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Gem Ændringer</button>
+                        <a asp-page="/Instruktoerer" class="btn btn-secondary">Annuller</a>
+                    </div>
+
+                    <!-- Slet-knap med bekræftelse -->
+                    <button type="submit"
+                            asp-page-handler="Delete"
+                            asp-route-id="@Model.Instruktor.InstruktorId"
+                            class="btn btn-danger"
+                            onclick="return confirm('Er du sikker på, at du vil slette denne instruktør?');">
+                        Slet instruktør
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

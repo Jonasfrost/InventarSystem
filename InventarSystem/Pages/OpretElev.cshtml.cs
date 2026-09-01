@@ -28,7 +28,7 @@ public class OpretElevModel : PageModel
             return Page();
         }
 
-        _context.Elever.Add(NyElev);
+        _context.Elev.Add(NyElev);
         await _context.SaveChangesAsync();
 
         return RedirectToPage("/Tilgængelig");

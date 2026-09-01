@@ -80,8 +80,10 @@ public class RedigerInventarModel : PageModel
             }
         }
 
+        // 5. Fjern de valgte udlån fra Udlaant-tabellen
         _context.Udlaant.RemoveRange(udlaanListe);
 
+        // 6. Gem alle ændringer samlet i én transaktion
         await _context.SaveChangesAsync();
 
         return RedirectToPage();

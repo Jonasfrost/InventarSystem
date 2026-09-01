@@ -1,40 +1,105 @@
 ﻿@page
-@model EleverModel
+@model InventarSystem.Pages.EleverModel
 @{
     ViewData["Title"] = "Elever";
 }
 
 <div class="container mt-4">
-    <h2>Elever</h2>
-    <a asp-page="/OpretElev" class="btn btn-primary">Tilføj ny elev</a>
-
-    <table class="table table-striped table-bordered mt-3">
-        <thead class="table-info">
-            <tr>
-                <th>Elev ID</th>
-                <th>Fornavn</th>
-                <th>Efternavn</th>
-                <th>E-mail</th>
-                <th>Mobil</th>
-                <th>Instruktør ID</th>
-                <th>Handling</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var elev in Model.EleverListe)
+    <!-- TITEL OG SØGEFELT SIDE OM SIDE -->
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <h2 class="mb-0">Elever</h2>
+        <form method="get" class="d-flex gap-2">
+            <input type="text" name="searchString" value="@Model.CurrentFilter" class="form-control" placeholder="Søg Elev ID, fornavn, efternavn" style="width: 280px;" />
+            <button type="submit" class="btn btn-outline-primary">Søg</button>
+            @if (!string.IsNullOrEmpty(Model.CurrentFilter))
             {
-                <tr>
-                    <td>@elev.ElevId</td>
-                    <td>@elev.Fn </td>
-                    <td>@elev.Ln</td>
-                    <td>@(elev.Mail ?? "-")</td>
-                    <td>@(elev.Mobil ?? "-")</td>
-                    <td>@(elev.InstruktorId.HasValue ? elev.InstruktorId.Value.ToString() : "-")</td>
-                    <td>
-                        <a asp-page="/RedigerElev" asp-route-id="@elev.ElevId" class="btn btn-sm btn-warning">Rediger</a>
-                    </td>
-                </tr>
+                <a asp-page="/Elever" class="btn btn-outline-secondary">Nulstil</a>
             }
-        </tbody>
-    </table>
+        </form>
+    </div>
+
+    <div class="row">
+        <!-- VESTRE SIDE: Opret ny elev -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Opret ny elev</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Fornavn</label>
+                            <input asp-for="NyElev.Fn" class="form-control" required />
+                            <span asp-validation-for="NyElev.Fn" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Efternavn</label>
+                            <input asp-for="NyElev.Ln" class="form-control" required />
+                            <span asp-validation-for="NyElev.Ln" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">E-mail</label>
+                            <input asp-for="NyElev.Mail" type="email" class="form-control" />
+                            <span asp-validation-for="NyElev.Mail" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mobil</label>
+                            <input asp-for="NyElev.Mobil" class="form-control" />
+                            <span asp-validation-for="NyElev.Mobil" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Instruktør (Valgfri)</label>
+                            <select asp-for="NyElev.InstruktorId" asp-items="Model.InstruktorDropdown" class="form-select">
+                                <option value="">-- Vælg instruktør --</option>
+                            </select>
+                            <span asp-validation-for="NyElev.InstruktorId" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Opret elev</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- HØJRE SIDE: Tabel over elever -->
+        <div class="col-md-8">
+            <table class="table table-striped table-bordered">
+                <thead class="table-info">
+                    <tr>
+                        <th>Elev ID</th>
+                        <th>Fornavn</th>
+                        <th>Efternavn</th>
+                        <th>E-mail</th>
+                        <th>Mobil</th>
+                        <th>Instruktør ID</th>
+                        <th>Handling</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.EleverListe != null && Model.EleverListe.Any())
+                    {
+                        @foreach (var elev in Model.EleverListe)
+                        {
+                            <tr>
+                                <td>@elev.ElevId</td>
+                                <td>@elev.Fn</td>
+                                <td>@elev.Ln</td>
+                                <td>@(elev.Mail ?? "-")</td>
+                                <td>@(elev.Mobil ?? "-")</td>
+                                <td>@(elev.InstruktorId.HasValue ? elev.InstruktorId.Value.ToString() : "-")</td>
+                                <td>
+                                    <a asp-page="/RedigerElev" asp-route-id="@elev.ElevId" class="btn btn-sm btn-warning">Rediger</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">Ingen elever fundet.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

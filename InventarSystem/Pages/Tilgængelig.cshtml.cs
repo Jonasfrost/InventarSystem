@@ -17,38 +17,29 @@ public class TilgaengeligModel : PageModel
 
     public List<Inventar> PaaLager { get; set; } = new();
 
-    public async Task OnGetAsync()
+    public string CurrentFilter { get; set; } = string.Empty;
+
+    public async Task OnGetAsync(string searchString)
     {
-        PaaLager = await _context.Inventar.ToListAsync();
-    }
+        CurrentFilter = searchString;
 
-    public async Task<IActionResult> OnPostUdlaanAsync(int id)
-    {
-        var vare = await _context.Inventar.FindAsync(id);
-        var elev = await _context.Elever.FirstOrDefaultAsync();
+        var query = _context.Inventar.AsQueryable();
 
-        if (elev == null)
+        if (!string.IsNullOrEmpty(searchString))
         {
-            ModelState.AddModelError(string.Empty, "Der skal oprettes mindst én elev i databasen før du kan udlåne.");
-            PaaLager = await _context.Inventar.ToListAsync();
-            return Page();
-        }
-
-        if (vare != null && vare.Antal > 0)
-        {
-            vare.Antal--;
-
-            _context.Udlaant.Add(new Udlaant
+            if (int.TryParse(searchString, out int idSearch))
             {
-                eleverId = elev.ElevId,
-                inventarId = vare.InventarId,
-                udlaantAntal = 1,
-                udlaantDato = DateTime.Now
-            });
-
-            await _context.SaveChangesAsync();
+                query = query.Where(i => i.InventarId == idSearch
+                                      || (i.Item != null && i.Item.Contains(searchString))
+                                      || (i.Sn != null && i.Sn.Contains(searchString)));
+            }
+            else
+            {
+                query = query.Where(i => (i.Item != null && i.Item.Contains(searchString))
+                                      || (i.Sn != null && i.Sn.Contains(searchString)));
+            }
         }
 
-        return RedirectToPage("/Tilgængelig");
+        PaaLager = await query.ToListAsync();
     }
 }

@@ -17,10 +17,37 @@ public class IndexModel : PageModel
 
     public List<Udlaant> UdlaanteVarer { get; set; } = new();
 
-    public async Task OnGetAsync()
+    public string CurrentFilter { get; set; } = string.Empty;
+
+    public async Task OnGetAsync(string searchString)
     {
-        UdlaanteVarer = await _context.Udlaant
-            .Include(u => u.Inventar) 
-            .ToListAsync();
+        CurrentFilter = searchString;
+
+        var query = _context.Udlaant
+            .Include(u => u.Inventar)
+            .AsQueryable();
+
+        // Filtrering ud fra søgning
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            if (int.TryParse(searchString, out int idSearch))
+            {
+                query = query.Where(u => u.udlaantId == idSearch
+                                      || u.eleverId == idSearch
+                                      || (u.Inventar != null && u.Inventar.Item.Contains(searchString)));
+            }
+            else
+            {
+                query = query.Where(u => u.Inventar != null && u.Inventar.Item.Contains(searchString));
+            }
+        }
+
+        // Hent data og sorter: Overskredne datoer først, herefter efter nærmeste afleveringsdato
+        var liste = await query.ToListAsync();
+
+        UdlaanteVarer = liste
+            .OrderByDescending(u => u.udlaantAfleveretDato.HasValue && u.udlaantAfleveretDato.Value < DateTime.Now) // Overskredne placeres øverst (true kommer før false)
+            .ThenBy(u => u.udlaantAfleveretDato) // Derefter sorteret efter hvornår de skal afleveres
+            .ToList();
     }
 }
