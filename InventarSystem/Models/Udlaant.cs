@@ -8,23 +8,27 @@ public class Udlaant
 {
     [Key]
     [Column("udlaantId")]
-    public int udlaantId { get; set; }
+    public int UdlaantId { get; set; }
 
     [Column("eleverId")]
-    public int eleverId { get; set; }
+    public int EleverId { get; set; }
 
     [Column("inventarId")]
-    public int inventarId { get; set; }
+    public int InventarId { get; set; }
 
     [Column("udlaantAntal")]
-    public int udlaantAntal { get; set; }
+    public int UdlaantAntal { get; set; }
 
     [Column("udlaantDato")]
-    public DateTime udlaantDato { get; set; }
+    public DateTime UdlaantDato { get; set; } = DateTime.Now;
 
     [Column("udlaantAfleveretDato")]
-    public DateTime? udlaantAfleveretDato { get; set; }
+    public DateTime? UdlaantAfleveretDato { get; set; }
 
-    [ForeignKey("inventarId")]
+    // Navigation properties til EF Core
+    [ForeignKey("InventarId")]
     public virtual Inventar? Inventar { get; set; }
+
+    [ForeignKey("EleverId")]
+    public virtual Elev? Elev { get; set; }
 }

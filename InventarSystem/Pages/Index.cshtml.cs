@@ -32,8 +32,8 @@ public class IndexModel : PageModel
         {
             if (int.TryParse(searchString, out int idSearch))
             {
-                query = query.Where(u => u.udlaantId == idSearch
-                                      || u.eleverId == idSearch
+                query = query.Where(u => u.UdlaantId == idSearch
+                                      || u.EleverId == idSearch
                                       || (u.Inventar != null && u.Inventar.Item.Contains(searchString)));
             }
             else
@@ -46,8 +46,8 @@ public class IndexModel : PageModel
         var liste = await query.ToListAsync();
 
         UdlaanteVarer = liste
-            .OrderByDescending(u => u.udlaantAfleveretDato.HasValue && u.udlaantAfleveretDato.Value < DateTime.Now) // Overskredne placeres øverst (true kommer før false)
-            .ThenBy(u => u.udlaantAfleveretDato) // Derefter sorteret efter hvornår de skal afleveres
+            .OrderByDescending(u => u.UdlaantAfleveretDato.HasValue && u.UdlaantAfleveretDato.Value < DateTime.Now) // Overskredne placeres øverst (true kommer før false)
+            .ThenBy(u => u.UdlaantAfleveretDato) // Derefter sorteret efter hvornår de skal afleveres
             .ToList();
     }
 }

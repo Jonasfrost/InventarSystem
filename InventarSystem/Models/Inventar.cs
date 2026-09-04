@@ -16,6 +16,14 @@ public class Inventar
     [Column("inventarSn")]
     public string? Sn { get; set; }
 
+    // Alias så koden både kan læse .Sn og .SN uden fejl
+    [NotMapped]
+    public string? SN
+    {
+        get => Sn;
+        set => Sn = value;
+    }
+
     [Column("inventarAntal")]
     public int Antal { get; set; }
 }

@@ -22,7 +22,10 @@ public class Elev
     [Column("eleverMobil")]
     public string? Mobil { get; set; }
 
-    // Rettes til det præcise SQL-kolonnenavn 'eleverInstruktorId'
     [Column("eleverInstruktorId")]
     public int? InstruktorId { get; set; }
+
+    // Genererer automatisk det fulde navn ud fra Fn og Ln
+    [NotMapped]
+    public string Navn => $"{Fn} {Ln}".Trim();
 }

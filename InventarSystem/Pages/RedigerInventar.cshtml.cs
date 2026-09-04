@@ -59,33 +59,38 @@ public class RedigerInventarModel : PageModel
         return RedirectToPage("/Tilgængelig");
     }
 
-    public async Task<IActionResult> OnPostDeleteSelectedAsync(List<int> selectedItems)
+    // Metode til at slette den enkelte inventarvare direkte (sletter også historiske/aktive udlån først)
+    public async Task<IActionResult> OnPostDeleteInventarAsync(int id)
     {
-        if (selectedItems == null || !selectedItems.Any())
+        var vare = await _context.Inventar.FindAsync(id);
+
+        if (vare == null)
         {
-            return RedirectToPage();
+            return RedirectToPage("/Tilgængelig");
         }
 
-        var udlaanListe = await _context.Udlaant
-            .Where(u => selectedItems.Contains(u.udlaantId))
-            .ToListAsync();
-
-        foreach (var udlaan in udlaanListe)
+        try
         {
-            var inventarVare = await _context.Inventar.FindAsync(udlaan.inventarId);
+            // 1. Slet alle udlånstilknytninger for varen først
+            var tilhoerendeUdlaan = await _context.Udlaant
+                .Where(u => u.InventarId == id)
+                .ToListAsync();
 
-            if (inventarVare != null)
+            if (tilhoerendeUdlaan.Any())
             {
-                inventarVare.Antal += udlaan.udlaantAntal;
+                _context.Udlaant.RemoveRange(tilhoerendeUdlaan);
             }
+
+            // 2. Slet selve varen fra lageret
+            _context.Inventar.Remove(vare);
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("/Tilgængelig");
         }
-
-        // 5. Fjern de valgte udlån fra Udlaant-tabellen
-        _context.Udlaant.RemoveRange(udlaanListe);
-
-        // 6. Gem alle ændringer samlet i én transaktion
-        await _context.SaveChangesAsync();
-
-        return RedirectToPage();
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, $"Kunne ikke slette varen: {ex.Message}");
+            return Page();
+        }
     }
 }

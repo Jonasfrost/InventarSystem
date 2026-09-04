@@ -20,10 +20,10 @@ public class InventarDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // ValueConverter til AES-256 kryptering
-        var converter = new ValueConverter<string, string>(
-            v => _encryptionService.Encrypt(v),
-            v => _encryptionService.Decrypt(v)
+        // ValueConverter opdateret med string? og null-tjek for at undgå CS8620
+        var converter = new ValueConverter<string?, string?>(
+            v => string.IsNullOrEmpty(v) ? v : _encryptionService.Encrypt(v),
+            v => string.IsNullOrEmpty(v) ? v : _encryptionService.Decrypt(v)
         );
 
         // 1. ELEVER TABEL MAPPING

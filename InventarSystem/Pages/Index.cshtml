@@ -36,19 +36,19 @@
                 @foreach (var udlaan in Model.UdlaanteVarer)
                 {
                     // Tjek om datoen er overskredet (og ikke allerede afleveret/udfyldt)
-                    bool erOverskredet = udlaan.udlaantAfleveretDato.HasValue && udlaan.udlaantAfleveretDato.Value < DateTime.Now;
+                    bool erOverskredet = udlaan.UdlaantAfleveretDato.HasValue && udlaan.UdlaantAfleveretDato.Value < DateTime.Now;
 
                     <tr class="@(erOverskredet ? "table-danger" : "")">
-                        <td>@udlaan.udlaantId</td>
-                        <td>@udlaan.eleverId</td>
+                        <td>@udlaan.UdlaantId</td>
+                        <td>@udlaan.EleverId</td>
                         <td>@(udlaan.Inventar?.Item ?? "Ukendt vare")</td>
-                        <td>@udlaan.udlaantAntal</td>
-                        <td>@udlaan.udlaantDato.ToShortDateString()</td>
+                        <td>@udlaan.UdlaantAntal</td>
+                        <td>@udlaan.UdlaantDato.ToShortDateString()</td>
                         <td class="@(erOverskredet ? "fw-bold text-danger" : "")">
-                            @(udlaan.udlaantAfleveretDato?.ToShortDateString() ?? "-")
+                            @(udlaan.UdlaantAfleveretDato?.ToShortDateString() ?? "-")
                         </td>
                         <td>
-                            <a asp-page="/RedigerUdlaant" asp-route-id="@udlaan.udlaantId" class="btn btn-sm btn-warning">Rediger</a>
+                            <a asp-page="/RedigerUdlaant" asp-route-id="@udlaan.UdlaantId" class="btn btn-sm btn-warning">Rediger</a>
                         </td>
                     </tr>
                 }

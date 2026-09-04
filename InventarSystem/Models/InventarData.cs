@@ -10,6 +10,6 @@ public static class InventarData
 
     public static List<Udlaant> UdlaantListe { get; set; } = new List<Udlaant>
     {
-        new Udlaant { udlaantId = 1, eleverId = 1, inventarId = 2, udlaantAntal = 1, udlaantDato = DateTime.Now.AddDays(-2) }
+        new Udlaant { UdlaantId = 1, EleverId = 1, InventarId = 2, UdlaantAntal = 1, UdlaantDato = DateTime.Now.AddDays(-2) }
     };
 }

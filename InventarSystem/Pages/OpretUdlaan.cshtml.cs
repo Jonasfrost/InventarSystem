@@ -27,9 +27,9 @@ public class OpretUdlaanModel : PageModel
 
         Udlaan = new Udlaant
         {
-            inventarId = inventarId,
-            udlaantAntal = 1,
-            udlaantDato = DateTime.Now
+            InventarId = inventarId,
+            UdlaantAntal = 1,
+            UdlaantDato = DateTime.Now
         };
 
         return Page();
@@ -38,25 +38,25 @@ public class OpretUdlaanModel : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
         // Fail-safe 1: Tjek om den valgte elev findes i databasen
-        var elevEksisterer = await _context.Elev.AnyAsync(e => e.ElevId == Udlaan.eleverId);
+        var elevEksisterer = await _context.Elev.AnyAsync(e => e.ElevId == Udlaan.EleverId);
         if (!elevEksisterer)
         {
-            ModelState.AddModelError("Udlaan.eleverId", "Vælg venligst en gyldig elev fra listen.");
+            ModelState.AddModelError("Udlaan.EleverId", "Vælg venligst en gyldig elev fra listen.");
         }
 
         // Fail-safe 2: Tjek om varen findes og om der er nok på lager
-        var vare = await _context.Inventar.FindAsync(Udlaan.inventarId);
+        var vare = await _context.Inventar.FindAsync(Udlaan.InventarId);
         if (vare == null)
         {
             ModelState.AddModelError(string.Empty, "Varen blev ikke fundet på lageret.");
         }
-        else if (Udlaan.udlaantAntal <= 0)
+        else if (Udlaan.UdlaantAntal <= 0)
         {
-            ModelState.AddModelError("Udlaan.udlaantAntal", "Antal skal være mindst 1.");
+            ModelState.AddModelError("Udlaan.UdlaantAntal", "Antal skal være mindst 1.");
         }
-        else if (vare.Antal < Udlaan.udlaantAntal)
+        else if (vare.Antal < Udlaan.UdlaantAntal)
         {
-            ModelState.AddModelError("Udlaan.udlaantAntal", $"Der er kun {vare.Antal} stk. på lager.");
+            ModelState.AddModelError("Udlaan.UdlaantAntal", $"Der er kun {vare.Antal} stk. på lager.");
         }
 
         if (!ModelState.IsValid)
@@ -67,8 +67,8 @@ public class OpretUdlaanModel : PageModel
         }
 
         // Træk antal fra lageret og opret udlån
-        vare!.Antal -= Udlaan.udlaantAntal;
-        Udlaan.udlaantDato = DateTime.Now;
+        vare!.Antal -= Udlaan.UdlaantAntal;
+        Udlaan.UdlaantDato = DateTime.Now;
         _context.Udlaant.Add(Udlaan);
 
         await _context.SaveChangesAsync();
